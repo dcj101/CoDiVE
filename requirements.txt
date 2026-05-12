@@ -1,0 +1,16 @@
+torch
+transformers
+datasets
+accelerate
+pandas
+scikit-learn
+tqdm
+pyyaml
+opencv-python
+decord
+pillow
+numpy
+# Optional acceleration / serving:
+# unsloth
+# vllm
+# qwen-vl-utils

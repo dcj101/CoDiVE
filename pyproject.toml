@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "counterfactual-distillation-poc"
+version = "0.1.0"
+description = "Stage-1 proof of concept for video QA counterfactual distillation."
+requires-python = ">=3.10"
+dependencies = [
+  "torch",
+  "transformers",
+  "datasets",
+  "accelerate",
+  "pandas",
+  "scikit-learn",
+  "tqdm",
+  "pyyaml",
+  "opencv-python",
+  "decord",
+  "pillow",
+  "numpy",
+]
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.ruff]
+line-length = 100

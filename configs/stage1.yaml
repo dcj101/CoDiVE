@@ -1,0 +1,35 @@
+seed: 42
+sample_size: 500
+train_size: 400
+
+paths:
+  raw_data_dir: data/raw
+  processed_dir: data/processed
+  perturb_dir: data/perturbed
+  outputs_dir: outputs
+  sampled_json: data/processed/sampled_500.json
+  split_json: data/processed/split_500.json
+  metrics_json: outputs/stage1_metrics.json
+
+models:
+  student_name: Qwen/Qwen2-VL-2B-Instruct
+  teacher_name: REPLACE_WITH_ONETHINKER_PATH
+  dtype: float16
+  device_map: auto
+  frame_stride: 10
+  max_new_tokens: 32
+  dry_run: false
+
+perturbations:
+  enabled: [black, wrong, shortcut]
+  wrong_text: "A red balloon"
+  shortcut_period: 10
+  shortcut_on_frames: 5
+
+training:
+  epochs: 3
+  lr: 1.0e-5
+  temperature: 3.0
+  delta_weight: 0.7
+  grad_clip_norm: 1.0
+  batch_size: 1
