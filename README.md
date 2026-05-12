@@ -16,10 +16,29 @@ src/cd_poc/                       # 可复用代码包
 
 ## 1. 安装
 
+推荐使用 Conda 管理环境。GPU 服务器使用默认环境文件：
+
+```bash
+conda env create -f environment.yml
+conda activate codive
+pip install -e .
+python scripts/check_env.py
+```
+
+如果只在 Mac 本机做 dry-run、代码调试或小规模数据处理，使用 Mac 环境文件：
+
+```bash
+conda env create -f environment-mac.yml
+conda activate codive-mac
+pip install -e .
+python scripts/check_env.py
+```
+
+如果不使用 Conda，也可以退回 pip 安装：
+
 ```bash
 pip install -r requirements.txt
 pip install -e .
-python scripts/check_env.py
 ```
 
 服务器上建议确认 CUDA 和 Hugging Face 登录：
@@ -153,6 +172,7 @@ outputs/train_smoke_losses.json
 ## 8. 推荐执行顺序
 
 ```bash
+conda activate codive
 python scripts/check_env.py
 python scripts/sample_data.py --video-root /path/to/videos
 python scripts/generate_perturbations.py
@@ -161,3 +181,13 @@ python scripts/train_cd.py --method all
 ```
 
 dry-run 全部通过后，再把 `configs/stage1.yaml` 的 teacher/student 路径改成真实模型，运行真实零样本评测。
+
+## 9. Conda 环境说明
+
+| 文件 | 适用场景 |
+| --- | --- |
+| `environment.yml` | Linux + NVIDIA GPU 服务器，包含 `pytorch-cuda=12.1` |
+| `environment-mac.yml` | macOS 本机开发、dry-run、轻量数据处理，不包含 CUDA |
+| `requirements.txt` | pip 备用安装方案 |
+
+如果服务器 CUDA 版本不是 12.1，请按实际驱动版本调整 `environment.yml` 里的 `pytorch-cuda`，例如 `11.8` 或 `12.4`。

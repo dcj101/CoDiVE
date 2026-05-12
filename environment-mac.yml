@@ -1,0 +1,26 @@
+name: codive-mac
+channels:
+  - pytorch
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - pip>=23
+  - setuptools>=68
+  - wheel
+  - pytorch
+  - torchvision
+  - transformers
+  - datasets
+  - accelerate
+  - pandas
+  - scikit-learn
+  - tqdm
+  - pyyaml
+  - pillow
+  - numpy
+  - opencv
+  - huggingface_hub
+  - pip:
+      - decord
+      - qwen-vl-utils
