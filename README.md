@@ -45,7 +45,7 @@ pip install -e .
 
 ```bash
 python -c "import torch; print(torch.cuda.is_available())"
-huggingface-cli whoami
+hf auth whoami
 ```
 
 ## 2. 配置模型

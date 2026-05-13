@@ -21,17 +21,22 @@ def main() -> int:
     except Exception as exc:
         print(f"torch check failed: {exc}")
 
-    try:
-        result = subprocess.run(
-            ["huggingface-cli", "whoami"],
-            check=False,
-            capture_output=True,
-            text=True,
-            timeout=15,
-        )
-        print(f"huggingface    : {result.stdout.strip() or result.stderr.strip()}")
-    except Exception as exc:
-        print(f"huggingface    : unavailable ({exc})")
+    for command in (["hf", "auth", "whoami"], ["huggingface-cli", "whoami"]):
+        try:
+            result = subprocess.run(
+                command,
+                check=False,
+                capture_output=True,
+                text=True,
+                timeout=15,
+            )
+        except FileNotFoundError:
+            continue
+        output = result.stdout.strip() or result.stderr.strip()
+        print(f"huggingface    : {output}")
+        break
+    else:
+        print("huggingface    : unavailable (install huggingface_hub and run `hf auth login`)")
     return 0
 
 
