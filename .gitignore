@@ -12,6 +12,8 @@ data/processed/
 data/perturbed/
 outputs/
 logs/
+models/
+src/counterfactual_distillation_poc.egg-info
 
 *.ckpt
 *.safetensors

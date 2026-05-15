@@ -1,6 +1,6 @@
 seed: 42
-sample_size: 500
-train_size: 400
+sample_size: 10
+train_size: 8
 
 paths:
   raw_data_dir: data/raw
@@ -12,16 +12,16 @@ paths:
   metrics_json: outputs/stage1_metrics.json
 
 models:
-  student_name: Qwen/Qwen2-VL-2B-Instruct
-  teacher_name: REPLACE_WITH_ONETHINKER_PATH
+  student_name: models/Qwen2-VL-2B-Instruct
+  teacher_name: models/OneThinker-8B
   dtype: float16
   device_map: auto
-  frame_stride: 10
-  max_new_tokens: 32
+  frame_stride: 20
+  max_new_tokens: 8
   dry_run: false
 
 perturbations:
-  enabled: [black, wrong, shortcut]
+  enabled: [black]
   wrong_text: "A red balloon"
   shortcut_period: 10
   shortcut_on_frames: 5
