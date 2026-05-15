@@ -8,7 +8,7 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-ANSWER_LETTERS = ["A", "B", "C", "D"]
+ANSWER_LETTERS = list("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
 
 
 def _first_existing(row: dict[str, Any], keys: list[str], default: Any = None) -> Any:
@@ -29,10 +29,11 @@ def normalize_item(row: dict[str, Any], video_root: str | None = None) -> dict[s
     question = str(_first_existing(row, ["question", "query", "q"], ""))
     options = _first_existing(row, ["options", "choices", "candidates"], [])
     if isinstance(options, dict):
-        options = [options.get(letter, "") for letter in ANSWER_LETTERS]
+        options = [options.get(letter, "") for letter in ANSWER_LETTERS if letter in options]
     if isinstance(options, str):
-        options = re.split(r"\s*[A-D][\).:]\s*", options)
+        options = re.split(r"\s*[A-Z][\).:]\s*", options)
         options = [opt for opt in options if opt]
+    options = list(options) if options is not None else []
 
     answer = _first_existing(row, ["answer", "label", "correct", "correct_answer"], "")
     question_type = _first_existing(row, ["question_type", "type", "category"], "unknown")
@@ -41,8 +42,8 @@ def normalize_item(row: dict[str, Any], video_root: str | None = None) -> dict[s
         "id": str(_first_existing(row, ["id", "qid", "question_id"], len(str(row)))),
         "video_path": video_path,
         "question": question,
-        "options": list(options) if options is not None else [],
-        "answer": normalize_answer(answer),
+        "options": options,
+        "answer": normalize_answer(answer, options),
         "question_type": str(question_type),
     }
     item["prompt"] = build_prompt(item["question"], item["options"])
@@ -55,28 +56,40 @@ def build_prompt(question: str, options: list[str] | None = None) -> str:
         lines.append("Options:")
         for letter, option in zip(ANSWER_LETTERS, options):
             lines.append(f"{letter}) {option}")
-    lines.append("Answer with only the option letter (A, B, C, or D).")
+        valid_letters = ", ".join(ANSWER_LETTERS[: len(options)])
+        lines.append(f"Answer with only the option letter ({valid_letters}).")
+    else:
+        lines.append("Answer concisely.")
     return "\n".join(lines)
 
 
-def normalize_answer(answer: Any) -> str:
+def normalize_answer(answer: Any, options: list[str] | None = None) -> str:
     text = str(answer).strip()
     if not text:
         return text
-    match = re.search(r"\b([A-D])\b", text.upper())
+    option_count = len(options or [])
+    valid_letters = ANSWER_LETTERS[:option_count] if option_count else ANSWER_LETTERS
+    match = re.search(r"\b([A-Z])\b", text.upper())
+    if match and match.group(1) in valid_letters:
+        return match.group(1)
+    if options:
+        lowered = text.casefold()
+        for idx, option in enumerate(options):
+            if lowered == str(option).strip().casefold():
+                return ANSWER_LETTERS[idx]
     if match:
         return match.group(1)
     if text.isdigit():
         idx = int(text)
-        if 0 <= idx < len(ANSWER_LETTERS):
+        if 0 <= idx < len(valid_letters):
             return ANSWER_LETTERS[idx]
-        if 1 <= idx <= len(ANSWER_LETTERS):
+        if 1 <= idx <= len(valid_letters):
             return ANSWER_LETTERS[idx - 1]
     return text
 
 
 def parse_prediction(text: str) -> str:
-    match = re.search(r"\b([A-D])\b", text.upper())
+    match = re.search(r"\b([A-Z])\b", text.upper())
     if match:
         return match.group(1)
     return text.strip()[:1].upper()

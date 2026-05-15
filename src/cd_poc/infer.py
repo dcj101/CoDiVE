@@ -18,8 +18,12 @@ class MockVideoQAModel:
     name: str = "mock"
 
     def generate(self, video_path: str, prompt: str) -> str:
+        import re
+
         digest = hashlib.sha256(f"{self.name}|{video_path}|{prompt}".encode()).digest()
-        return ANSWER_LETTERS[digest[0] % len(ANSWER_LETTERS)]
+        letters = re.findall(r"^([A-Z])\)", prompt, flags=re.MULTILINE)
+        candidates = letters or ANSWER_LETTERS[:4]
+        return candidates[digest[0] % len(candidates)]
 
 
 class HFVideoQAModel:

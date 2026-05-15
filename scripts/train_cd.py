@@ -20,12 +20,13 @@ def _stable_vec(text: str, dim: int = 16) -> list[float]:
 
 def _mock_teacher_logits(row: dict, kind: str) -> list[float]:
     answer = row.get("answer", "A")
-    idx = max(0, min(3, ord(answer[:1]) - ord("A"))) if answer else 0
-    logits = [-1.0, -1.0, -1.0, -1.0]
+    num_options = max(2, len(row.get("options") or []), 4)
+    idx = max(0, min(num_options - 1, ord(answer[:1]) - ord("A"))) if answer else 0
+    logits = [-1.0] * num_options
     if kind == "clean":
         logits[idx] = 3.0
     elif kind == "black":
-        logits = [0.0, 0.0, 0.0, 0.0]
+        logits = [0.0] * num_options
     else:
         logits[idx] = 0.5
     return logits
