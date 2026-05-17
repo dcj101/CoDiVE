@@ -10,7 +10,6 @@ dependencies:
   - wheel
   - pytorch
   - torchvision
-  - transformers
   - datasets
   - accelerate
   - pandas
@@ -22,5 +21,7 @@ dependencies:
   - opencv
   - huggingface_hub
   - pip:
+      - transformers==4.49.0
+      - tokenizers>=0.21,<0.22
       - decord
       - qwen-vl-utils

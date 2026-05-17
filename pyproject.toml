@@ -9,7 +9,8 @@ description = "Stage-1 proof of concept for video QA counterfactual distillation
 requires-python = ">=3.10"
 dependencies = [
   "torch",
-  "transformers",
+  "transformers==4.49.0",
+  "tokenizers>=0.21,<0.22",
   "datasets",
   "accelerate",
   "pandas",
