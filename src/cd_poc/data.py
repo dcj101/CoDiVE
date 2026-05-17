@@ -88,7 +88,13 @@ def normalize_answer(answer: Any, options: list[str] | None = None) -> str:
     return text
 
 
-def parse_prediction(text: str) -> str:
+def parse_prediction(text: str, options: list[str] | None = None) -> str:
+    if options:
+        lowered = text.strip().casefold()
+        for idx, option in enumerate(options):
+            option_text = str(option).strip().casefold()
+            if lowered == option_text or option_text in lowered:
+                return ANSWER_LETTERS[idx]
     match = re.search(r"\b([A-Z])\b", text.upper())
     if match:
         return match.group(1)

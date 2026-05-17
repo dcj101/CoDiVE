@@ -10,7 +10,7 @@ opencv-python
 decord
 pillow
 numpy
+qwen-vl-utils
 # Optional acceleration / serving:
 # unsloth
 # vllm
-# qwen-vl-utils
