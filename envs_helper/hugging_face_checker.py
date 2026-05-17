@@ -1,19 +1,23 @@
-from huggingface_hub import HfApi
+from datasets import load_dataset, get_dataset_split_names
 
-api = HfApi()
 names = [
-    "jinyoungkim/NExT-GQA",
     "appletea2333/nextgqa",
     "sming256/NeXTGQA",
 ]
 
 for name in names:
     print("=" * 100)
-    print(name)
+    print("testing:", name)
     try:
-        files = api.list_repo_files(name, repo_type="dataset")
-        for f in files[:80]:
-            print(" ", f)
-        print("total files:", len(files))
+        splits = get_dataset_split_names(name)
+        print("splits:", splits)
+
+        for split in splits:
+            print("-" * 50)
+            print("split:", split)
+            ds = load_dataset(name, split=split)
+            print("num rows:", len(ds))
+            print("features:", ds.features)
+            print("first row:", ds[0])
     except Exception as e:
         print("FAILED:", type(e).__name__, e)
