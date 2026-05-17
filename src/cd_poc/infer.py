@@ -34,6 +34,8 @@ class HFVideoQAModel:
         dtype: str = "float16",
         device_map: str = "auto",
         frame_stride: int = 10,
+        video_fps: float | None = None,
+        video_max_pixels: int = 224 * 224,
         max_new_tokens: int = 32,
     ) -> None:
         import torch
@@ -53,6 +55,8 @@ class HFVideoQAModel:
         )
         self.model.eval()
         self.frame_stride = frame_stride
+        self.video_fps = video_fps
+        self.video_max_pixels = video_max_pixels
         self.max_new_tokens = max_new_tokens
 
     @staticmethod
@@ -72,8 +76,10 @@ class HFVideoQAModel:
             return next(self.model.parameters()).device
 
     def _video_fps(self) -> float:
+        if self.video_fps is not None:
+            return max(0.05, float(self.video_fps))
         # Qwen-VL utils accepts fps rather than frame stride. This keeps long videos cheap.
-        return max(0.2, min(2.0, 30.0 / max(1, self.frame_stride)))
+        return max(0.2, min(1.0, 30.0 / max(1, self.frame_stride)))
 
     def _build_qwen_inputs(self, video_path: str, prompt: str):
         try:
@@ -92,7 +98,7 @@ class HFVideoQAModel:
                         "type": "video",
                         "video": video_path,
                         "fps": self._video_fps(),
-                        "max_pixels": 360 * 420,
+                        "max_pixels": self.video_max_pixels,
                     },
                     {"type": "text", "text": prompt},
                 ],

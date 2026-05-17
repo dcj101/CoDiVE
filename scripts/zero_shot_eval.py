@@ -38,6 +38,8 @@ def main() -> int:
         dtype=cfg.models.dtype,
         device_map=cfg.models.device_map,
         frame_stride=cfg.models.frame_stride,
+        video_fps=cfg.models.video_fps,
+        video_max_pixels=cfg.models.video_max_pixels,
         max_new_tokens=cfg.models.max_new_tokens,
     )
 

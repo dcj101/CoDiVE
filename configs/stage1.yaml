@@ -17,7 +17,9 @@ models:
   dtype: float16
   device_map: auto
   frame_stride: 20
-  max_new_tokens: 8
+  video_fps: 0.5
+  video_max_pixels: 50176
+  max_new_tokens: 4
   dry_run: false
 
 perturbations:
