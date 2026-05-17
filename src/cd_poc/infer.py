@@ -35,6 +35,7 @@ class HFVideoQAModel:
         device_map: str = "auto",
         frame_stride: int = 10,
         video_fps: float | None = None,
+        video_min_pixels: int = 112 * 112,
         video_max_pixels: int = 224 * 224,
         max_new_tokens: int = 32,
     ) -> None:
@@ -56,6 +57,7 @@ class HFVideoQAModel:
         self.model.eval()
         self.frame_stride = frame_stride
         self.video_fps = video_fps
+        self.video_min_pixels = video_min_pixels
         self.video_max_pixels = video_max_pixels
         self.max_new_tokens = max_new_tokens
 
@@ -98,6 +100,7 @@ class HFVideoQAModel:
                         "type": "video",
                         "video": video_path,
                         "fps": self._video_fps(),
+                        "min_pixels": self.video_min_pixels,
                         "max_pixels": self.video_max_pixels,
                     },
                     {"type": "text", "text": prompt},

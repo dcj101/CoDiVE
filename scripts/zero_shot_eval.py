@@ -39,6 +39,7 @@ def main() -> int:
         device_map=cfg.models.device_map,
         frame_stride=cfg.models.frame_stride,
         video_fps=cfg.models.video_fps,
+        video_min_pixels=cfg.models.video_min_pixels,
         video_max_pixels=cfg.models.video_max_pixels,
         max_new_tokens=cfg.models.max_new_tokens,
     )

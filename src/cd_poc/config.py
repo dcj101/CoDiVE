@@ -26,6 +26,7 @@ class ModelsConfig:
     device_map: str = "auto"
     frame_stride: int = 10
     video_fps: float = 0.5
+    video_min_pixels: int = 12544
     video_max_pixels: int = 50176
     max_new_tokens: int = 32
     dry_run: bool = False

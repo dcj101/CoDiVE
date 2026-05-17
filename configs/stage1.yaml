@@ -18,6 +18,7 @@ models:
   device_map: auto
   frame_stride: 20
   video_fps: 0.5
+  video_min_pixels: 12544
   video_max_pixels: 50176
   max_new_tokens: 4
   dry_run: false
