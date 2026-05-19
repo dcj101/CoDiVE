@@ -1,6 +1,6 @@
 seed: 42
-sample_size: 10
-train_size: 8
+sample_size: 100
+train_size: 10
 
 paths:
   raw_data_dir: data/raw
@@ -24,7 +24,7 @@ models:
   dry_run: false
 
 perturbations:
-  enabled: [black]
+  enabled: [black, wrong, shortcut]
   wrong_text: "A red balloon"
   shortcut_period: 10
   shortcut_on_frames: 5
