@@ -63,13 +63,24 @@ class HFVideoQAModel:
 
     @staticmethod
     def _load_model(model_name: str, **kwargs):
-        try:
-            from transformers import Qwen2VLForConditionalGeneration
-        except ImportError:
-            from transformers import AutoModelForVision2Seq
+        from transformers import AutoConfig, AutoModelForVision2Seq
 
-            return AutoModelForVision2Seq.from_pretrained(model_name, **kwargs)
-        return Qwen2VLForConditionalGeneration.from_pretrained(model_name, **kwargs)
+        config = AutoConfig.from_pretrained(model_name, trust_remote_code=True)
+        model_type = getattr(config, "model_type", "")
+        if model_type == "qwen2_vl":
+            from transformers import Qwen2VLForConditionalGeneration
+
+            return Qwen2VLForConditionalGeneration.from_pretrained(model_name, **kwargs)
+        if model_type == "qwen2_5_vl":
+            try:
+                from transformers import Qwen2_5_VLForConditionalGeneration
+            except ImportError as exc:
+                raise ImportError(
+                    "当前 transformers 版本不支持 Qwen2.5-VL。"
+                    "请升级到支持 Qwen2_5_VLForConditionalGeneration 的版本。"
+                ) from exc
+            return Qwen2_5_VLForConditionalGeneration.from_pretrained(model_name, **kwargs)
+        return AutoModelForVision2Seq.from_pretrained(model_name, **kwargs)
 
     def _target_device(self):
         try:
